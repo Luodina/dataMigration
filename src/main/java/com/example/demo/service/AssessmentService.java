@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.context.MessageSource;
 // import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 //import java.util.Optional;
 
@@ -15,35 +17,21 @@ public class AssessmentService {
     @Autowired
     AssessmentDao assessmentDao;
 
-    public List<Assessment> xxx() {
+    public List<Assessment> getAssessmentList() {
         return this.assessmentDao.getEverything();
     }
-    // public List<Assessment> getAllAssessments() {
-    //     return this.assessmentDao.findAll();
-    // }
 
-    // public Assessment addAssessment(Assessment assessment) {
-    //     return this.assessmentDao.save(assessment);
-    // }
+    public Assessment getAssessmentListById(Long id) {
+        return this.assessmentDao.getAssessmentListById(id);
+    }
+    
+    @Transactional
+    public int updateApplyStatus(Long id, String status) {
 
-    // //other methods go here
-
-
-    // public Optional<Assessment> getAssessmentById(int id) {
-    //     return this.assessmentDao.findById(id);
-    // }
-
-    // public Assessment updateAssessment(Assessment assessment) {
-    //     return this.assessmentDao.save(assessment);
-    // }
-
-    // public void deleteAssessmentById(int id) {
-    //     this.assessmentDao.deleteById(id);
-    // }
-
-    // public void deleteAllAssessments() {
-    //     this.assessmentDao.deleteAll();
-    // }
-
-
+        System.out.println("************** id");
+        System.out.println(id);
+        System.out.println("************** status");
+        System.out.println(status);
+        return this.assessmentDao.updateApply();
+    }
 }

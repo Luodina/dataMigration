@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 //import static java.lang.System.exit;
 
+@EnableTransactionManagement
 @SpringBootApplication
 @EnableJpaAuditing
 public class DemoApplication implements CommandLineRunner {
@@ -51,18 +53,34 @@ public class DemoApplication implements CommandLineRunner {
 		if (args.length > 0) {
 			System.out.println("111111");
 		} else {
-			System.out.println("222222");
-			List<Assessment> bbb = assessmentService.xxx();	
+			List<Assessment> bbb = assessmentService.getAssessmentList();	
 			Assessment first = bbb.get(0);
-			System.out.println("@@@@@@@@@@@@@");
+			System.out.println("@@@@@@@@@@@@@@@");
 			System.out.println(first.toString());
 			// for (Assessment aName : bbb) {
 			// 	System.out.println(aName.toString());
 			// }
-			//System.out.println(bbb);
+			// System.out.println(bbb);
 			//log.info(bbb);
-			String aaa = consumeWebService.createAssessment(first);
-			log.info(aaa);
+			Boolean postRes = consumeWebService.createAssessment(first);
+			System.out.println("**************");
+			System.out.println(first);
+			System.out.println(postRes.toString());
+			int statusUpd ;
+			if (postRes) {
+				System.out.println("APPLIED");
+				Assessment ccc = assessmentService.getAssessmentListById(first.getId());	
+				ccc.setApplyStatus("APPLIED");	
+				System.out.println(ccc);
+				
+				
+				// statusUpd= assessmentService.updateApplyStatus(first.getId(),"APPLIED!!");
+				// System.out.println(statusUpd);
+			  } else {
+				System.out.println("ERROR");
+				//statusUpd= assessmentService.updateApplyStatus(first.getId(),"ERROR");	
+			  }
+			//log.info(statusUpd.toString());
 		}
 
 	}
