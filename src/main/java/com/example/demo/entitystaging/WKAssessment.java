@@ -1,17 +1,14 @@
-package com.example.demo.entity;
+package com.example.demo.entitystaging;
 
 import java.math.BigInteger;
-//import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.*;
-// import java.util.ArrayList;
-// import java.util.Collection;
-// import java.util.List;
 
 @Entity
 @Table(name = "WK_ASSESSMENT")
-public class Assessment {
+public class WKAssessment {
     @Column(name = "UNIQUE_KEY", updatable = false, nullable = false)
     @Id
     // @GeneratedValue(strategy = GenerationType.AUTO)
@@ -78,9 +75,9 @@ public class Assessment {
     private String applyStatus;
 
     @Column(name = "APPLY_DTM", nullable = true, length = 6)
-    private Date applyDTM;
+    private LocalDateTime applyDTM;
 
-    public Assessment(Long id,
+    public WKAssessment(Long id,
             BigInteger batchId, 
             String txnType,
             BigInteger assessmentId,
@@ -101,7 +98,7 @@ public class Assessment {
             BigInteger verifyStatus, 
             String resultMsg, 
             String applyStatus, 
-            Date applyDTM
+            LocalDateTime applyDTM
             ) {
                 this.id =id;
         this.batchId = batchId;
@@ -127,7 +124,7 @@ public class Assessment {
         this.applyDTM = applyDTM;
     }
 
-    public Assessment() {
+    public WKAssessment() {
     }
     
     public Date getVersion() {
@@ -146,19 +143,19 @@ public class Assessment {
         this.createdDTM = createdDTM;
     }
 
-    // public Date getApplyDTM() {
-    //     return applyDTM;
-    // }
+    public LocalDateTime getApplyDTM() {
+        return applyDTM;
+    }
 
-    // public void setApplyDTM(final Date applyDTM) {
-    //     this.applyDTM = applyDTM;
-    // }
+    public void setApplyDTM(LocalDateTime applyDTM) {
+        this.applyDTM = applyDTM;
+    }
     
     public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(final String updatedBy) {
+    public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
@@ -174,7 +171,7 @@ public class Assessment {
         return resultMsg;
     }
 
-    public void setResultMsg(final String resultMsg) {
+    public void setResultMsg(String resultMsg) {
         this.resultMsg = resultMsg;
     }
 
@@ -246,7 +243,7 @@ public class Assessment {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public BigInteger getAssessmentId() {
@@ -307,7 +304,7 @@ public class Assessment {
 
     @Override
     public String toString() {
-        return  "Assessment{" +
+        return  "WKAssessment{" +
                 "id=" + id +
                 ", batchId='" + batchId + '\'' +
                 ", txnType=" + txnType +'\'' +
