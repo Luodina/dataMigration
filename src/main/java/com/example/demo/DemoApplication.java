@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import com.example.demo.entitytarget.Assessment;
 import com.example.demo.entitystaging.WKAssessment;
@@ -39,16 +41,17 @@ public class DemoApplication implements CommandLineRunner {
 		if (args.length > 0) {
 			System.out.println("111111");
 		} else {
+			LocalDateTime date = LocalDateTime.now();
 			System.out.println("222222");
 			List<WKAssessment> bbb = wkAssessmentService.getAssessmentList();	
-			WKAssessment first = bbb.get(0);
-			System.out.println("**************");
+			WKAssessment first = bbb.get(3);
+			System.out.println("************** ASMT from STAGING");
 			System.out.println(first);
 
-			List<Assessment> aaa = assessmentService.getAssessmentList();	
-			Assessment second = aaa.get(0);
-			System.out.println("**************");
-			System.out.println(second);
+			// List<Assessment> aaa = assessmentService.getAssessmentList();	
+			// Assessment second = aaa.get(0);
+			// System.out.println("************** ASMT from TARGET");
+			// System.out.println(second);
 			Assessment migAssessment = new Assessment();
 			migAssessment.setAssessmentId(first.getAssessmentId());
 			migAssessment.setEncounterId(first.getAssessmentId());
@@ -61,24 +64,18 @@ public class DemoApplication implements CommandLineRunner {
 			migAssessment.setCreatedBy(first.getCreatedBy());
 			migAssessment.setCreatedDTM(first.getCreatedDTM());
 			migAssessment.setUpdatedBy(first.getUpdatedBy());
-			migAssessment.setUpdatedDTM(first.getUpdatedDTM());
+			migAssessment.setUpdatedDTM(new Timestamp(System.currentTimeMillis()));
 			migAssessment.setVersion(first.getVersion());
-			System.out.println("############################");
+			System.out.println("############################ MIG ASMT");
 			System.out.println(migAssessment);
-			
-			// String result = AssessmentService.saveAssessment(migAssessment);
-			// System.out.println("############################");
-			// System.out.println(result);
-			// //Boolean postRes = consumeWebService.createAssessment(first);
-			// String statusUpd = "";
-			// //if (postRes) {
-			// 	System.out.println("APPLIED");
-			// 	String status = "APPLIED";
-			// 	String cc = wkAssessmentService.updateAssessment(first.getId(), status);
-			// //   } else {
-			// // 	System.out.println("ERROR");
-			// // 	//statusUpd= wkAssessmentService.updateApplyStatus(first.getId(),"ERROR");	
-			// //   }
+			String result = assessmentService.updateAssessment(migAssessment);
+			System.out.println("############################ RESULT updateAssessment TARGET");
+			System.out.println(result);
+			first.setApplyStatus(result);	
+			first.setApplyDTM(date);	
+			String res = wkAssessmentService.updateWKAssessment(first);
+			System.out.println("############################ RESULT updateAssessment STAGING");
+			System.out.println(res);  
 			// log.info(statusUpd);
 		}
 

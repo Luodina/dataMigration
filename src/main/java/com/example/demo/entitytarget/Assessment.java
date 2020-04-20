@@ -6,7 +6,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ASSESSMENT")
+@Table(name="ASSESSMENT", schema="ASSESSMENT")
 public class Assessment {
     @Column(name = "ASSESSMENT_ID", nullable = false, length = 10)
     @Id

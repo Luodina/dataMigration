@@ -16,10 +16,13 @@ public class AssessmentService {
     private static Logger log = LoggerFactory.getLogger(AssessmentService.class);
 
     @Autowired
-    AssessmentDao AssessmentDao;
+    AssessmentDao assessmentDao;
 
+    // public List<Assessment> getAssessmentList() {
+    //     return this.assessmentDao.getEverything();
+    // }
     public List<Assessment> getAssessmentList() {
-        return this.AssessmentDao.getEverything();
+        return this.assessmentDao.findAll();
     }
 
     // public Assessment getAssessmentListById(Long id) {
@@ -27,15 +30,15 @@ public class AssessmentService {
     // }
 
     // @Transactional(readOnly = false)
-    // public String saveAssessment(Assessment asmt) {
-    //     try{
-    //         Assessment ff = this.AssessmentDao.saveAndFlush(asmt);
-    //         System.out.println(ff);
-    //         return "SUCCESSS!!!";
-    //     } catch(Exception e) {
-    //         log.info(e.getMessage());
-    //         return "ERROR!!!";
-    //     }     
-    // }
+    public String updateAssessment(Assessment asmt) {
+        try{
+            Assessment ff = this.assessmentDao.saveAndFlush(asmt);
+            System.out.println(ff);
+            return "APPLIED";
+        } catch(Exception e) {
+            log.info(e.getMessage());
+            return "ERROR";
+        }     
+    }
     
 }

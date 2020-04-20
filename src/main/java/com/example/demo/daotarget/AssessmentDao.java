@@ -13,7 +13,9 @@ import java.util.List;
 
 @Repository
 //@Transactional
-public interface AssessmentDao extends JpaRepository<Assessment, Long> {
-    @Query(value = "select * from ASSESSMENT.ASSESSMENT where ROWNUM<=3", nativeQuery = true)
-    List<Assessment> getEverything(); 
+public interface AssessmentDao extends JpaRepository<Assessment, BigInteger> {
+    // @Query(value = "select * from ASSESSMENT.ASSESSMENT where ROWNUM<=3", nativeQuery = true)
+    // List<Assessment> getEverything(); 
+
+   
 }

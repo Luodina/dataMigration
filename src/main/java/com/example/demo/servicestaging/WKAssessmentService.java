@@ -30,18 +30,14 @@ public class WKAssessmentService {
     }
     
     // @Transactional(readOnly = false)
-    // public String updateAssessment(Long id, String status) {
-    //     LocalDateTime date = LocalDateTime.now();
-    //     WKAssessment asmt = this.wkAssessmentDao.findById(id).get();
-    //     asmt.setApplyStatus(status);	
-    //     asmt.setApplyDTM(date);	
-    //     try{
-    //         WKAssessment ff = this.wkAssessmentDao.saveAndFlush(asmt);
-    //         System.out.println(ff);
-    //         return "SUCCESSS!!!";
-    //     } catch(Exception e) {
-    //         log.info(e.getMessage());
-    //         return "ERROR!!!";
-    //     }        
-    // }
+    public String updateWKAssessment(WKAssessment asmt) {
+        try{
+            WKAssessment ff = this.wkAssessmentDao.saveAndFlush(asmt);
+            System.out.println(ff);
+            return "SUCCESSS";
+        } catch(Exception e) {
+            log.info(e.getMessage());
+            return "ERROR";
+        }        
+    }
 }
