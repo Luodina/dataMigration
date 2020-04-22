@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import com.example.demo.entitytarget.Assessment;
 import com.example.demo.entitystaging.WKAssessment;
+import com.example.demo.entitystaging.JobControl;
 import com.example.demo.servicestaging.WKAssessmentService;
+import com.example.demo.servicestaging.JobControlService;
 import com.example.demo.servicetarget.AssessmentService;
 
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ public class DemoApplication implements CommandLineRunner {
 
 	@Autowired
 	WKAssessmentService wkAssessmentService;
+
+	@Autowired
+	JobControlService jobControlService;
 	public static void main(final String[] args) throws Exception  {
 		log.info("start");
 		SpringApplication.run(DemoApplication.class, args);	
@@ -41,42 +46,66 @@ public class DemoApplication implements CommandLineRunner {
 		if (args.length > 0) {
 			System.out.println("111111");
 		} else {
-			LocalDateTime date = LocalDateTime.now();
-			System.out.println("222222");
-			List<WKAssessment> bbb = wkAssessmentService.getAssessmentList();	
-			WKAssessment first = bbb.get(3);
-			System.out.println("************** ASMT from STAGING");
-			System.out.println(first);
+			//get JobControl data
+			JobControl jc=jobControlService.getJobControlByModuleNmAndBatchNm("ASMT","DH_HA_DATA_APPLY");
+			System.out.println("========JobControl========" + jc.getModuleName()+ "   "+jc.getBatchName());
+			Integer instId = jobControlService.jobStart(
+				jc.getModuleName(),
+				jc.getBatchName(),
+				jc.getInstCd(),
+				jc.getApplicationCd(),
+				jc.getJobType(),
+				jc.getDataFromDTM(),
+				jc.getDataToDTM(),
+				0,0,""
+			);
 
-			// List<Assessment> aaa = assessmentService.getAssessmentList();	
-			// Assessment second = aaa.get(0);
-			// System.out.println("************** ASMT from TARGET");
-			// System.out.println(second);
-			Assessment migAssessment = new Assessment();
-			migAssessment.setAssessmentId(first.getAssessmentId());
-			migAssessment.setEncounterId(first.getAssessmentId());
-			migAssessment.setClinicCd(first.getClinicCd());
-			migAssessment.setCodeAssessmentCd(first.getCodeAssessmentCd());
-			migAssessment.setCodeAssessmentFieldId(first.getCodeAssessmentFieldId());
-			migAssessment.setRowId(first.getRowId());
-			migAssessment.setAssessmentResult(first.getAssessmentResult());
-			migAssessment.setCims1Key(first.getCims1Key());
-			migAssessment.setCreatedBy(first.getCreatedBy());
-			migAssessment.setCreatedDTM(first.getCreatedDTM());
-			migAssessment.setUpdatedBy(first.getUpdatedBy());
-			migAssessment.setUpdatedDTM(new Timestamp(System.currentTimeMillis()));
-			migAssessment.setVersion(first.getVersion());
-			System.out.println("############################ MIG ASMT");
-			System.out.println(migAssessment);
-			String result = assessmentService.updateAssessment(migAssessment);
-			System.out.println("############################ RESULT updateAssessment TARGET");
-			System.out.println(result);
-			first.setApplyStatus(result);	
-			first.setApplyDTM(date);	
-			String res = wkAssessmentService.updateWKAssessment(first);
-			System.out.println("############################ RESULT updateAssessment STAGING");
-			System.out.println(res);  
-			// log.info(statusUpd);
+			if (instId != null){
+				System.out.println("=========Inst Id======="+instId);	
+				String resMsg= this.jobControlService.jobUpdate(
+					jc.getModuleName(), 
+					jc.getBatchName(), 
+					jc.getInstCd(),
+					jc.getApplicationCd(),
+					jc.getJobType(),
+					jc.getCurrentStep(),
+					instId,
+					jc.getCommitDataDTM(),
+					jc.getDataDTM(),
+					0
+				);	
+				System.out.println(resMsg);	
+			}	
+			LocalDateTime date = LocalDateTime.now();
+			List<WKAssessment> wkAsmtList = wkAssessmentService.getAssessmentList();
+			System.out.println("************** wkAsmtList " +wkAsmtList);
+			System.out.println("************** wkAsmtList.size " + wkAsmtList.size());
+			if (wkAsmtList.size()>1){				
+				for(WKAssessment wkAsmt : wkAsmtList) {
+				System.out.println("*********** wkAsmt" + wkAsmt);
+				Assessment migAssessment = new Assessment();
+				migAssessment.setAssessmentId(wkAsmt.getAssessmentId());
+				migAssessment.setEncounterId(wkAsmt.getAssessmentId());
+				migAssessment.setClinicCd(wkAsmt.getClinicCd());
+				migAssessment.setCodeAssessmentCd(wkAsmt.getCodeAssessmentCd());
+				migAssessment.setCodeAssessmentFieldId(wkAsmt.getCodeAssessmentFieldId());
+				migAssessment.setRowId(wkAsmt.getRowId());
+				migAssessment.setAssessmentResult("migrated");//(wkAsmt.getAssessmentResult());
+				migAssessment.setCims1Key(wkAsmt.getCims1Key());
+				migAssessment.setCreatedBy(wkAsmt.getCreatedBy());
+				migAssessment.setCreatedDTM(wkAsmt.getCreatedDTM());
+				migAssessment.setUpdatedBy(wkAsmt.getUpdatedBy());
+				migAssessment.setUpdatedDTM(new Timestamp(System.currentTimeMillis()));
+				migAssessment.setVersion(wkAsmt.getVersion());
+				//System.out.println("*********** migAssessment" + migAssessment);
+				String targetRes = assessmentService.updateAssessment(migAssessment);
+				System.out.println("*********** RESULT updateAssessment TARGET" + targetRes);
+				wkAsmt.setApplyStatus(targetRes);	
+				wkAsmt.setApplyDTM(date);	
+				String stagingRes = wkAssessmentService.updateWKAssessment(wkAsmt);
+				System.out.println("*********** RESULT updateAssessment STAGING"+stagingRes);
+			}
+			}
 		}
 
 	}
