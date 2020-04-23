@@ -48,7 +48,7 @@ public class DemoApplication implements CommandLineRunner {
 		} else {
 			//get JobControl data
 			JobControl jc=jobControlService.getJobControlByModuleNmAndBatchNm("ASMT","DH_HA_DATA_APPLY");
-			System.out.println("========JobControl========" + jc.getModuleName()+ "   "+jc.getBatchName());
+			//jobStart	
 			Integer instId = jobControlService.jobStart(
 				jc.getModuleName(),
 				jc.getBatchName(),
@@ -60,8 +60,38 @@ public class DemoApplication implements CommandLineRunner {
 				0,0,""
 			);
 
-			if (instId != null){
-				System.out.println("=========Inst Id======="+instId);	
+			if (instId != null){	
+				LocalDateTime date = LocalDateTime.now();
+				List<WKAssessment> wkAsmtList = wkAssessmentService.getAssessmentList();
+				System.out.println("************** wkAsmtList " +wkAsmtList.size()+ wkAsmtList.get(0));
+				if (wkAsmtList.size()>0 && wkAsmtList.get(0)!= null){				
+					for(WKAssessment wkAsmt : wkAsmtList) {
+						System.out.println("*********** wkAsmt" + wkAsmt);
+						Assessment migAssessment = new Assessment();
+						migAssessment.setAssessmentId(wkAsmt.getAssessmentId());
+						migAssessment.setEncounterId(wkAsmt.getAssessmentId());
+						migAssessment.setClinicCd(wkAsmt.getClinicCd());
+						migAssessment.setCodeAssessmentCd(wkAsmt.getCodeAssessmentCd());
+						migAssessment.setCodeAssessmentFieldId(wkAsmt.getCodeAssessmentFieldId());
+						migAssessment.setRowId(wkAsmt.getRowId());
+						migAssessment.setAssessmentResult("migrated");//(wkAsmt.getAssessmentResult());
+						migAssessment.setCims1Key(wkAsmt.getCims1Key());
+						migAssessment.setCreatedBy(wkAsmt.getCreatedBy());
+						migAssessment.setCreatedDTM(wkAsmt.getCreatedDTM());
+						migAssessment.setUpdatedBy(wkAsmt.getUpdatedBy());
+						migAssessment.setUpdatedDTM(new Timestamp(System.currentTimeMillis()));
+						migAssessment.setVersion(wkAsmt.getVersion());
+						System.out.println("*********** migAssessment" + migAssessment);
+						String targetRes = assessmentService.updateAssessment(migAssessment);
+						System.out.println("*********** RESULT updateAssessment TARGET" + targetRes);
+						wkAsmt.setApplyStatus(targetRes);	
+						wkAsmt.setApplyDTM(date);	
+						String stagingRes = wkAssessmentService.updateWKAssessment(wkAsmt);
+						System.out.println("*********** RESULT updateAssessment STAGING"+stagingRes);
+					}
+				} 
+				System.out.println("=========Inst Id======="+instId);
+				//jobUpdate	
 				String resMsg= this.jobControlService.jobUpdate(
 					jc.getModuleName(), 
 					jc.getBatchName(), 
@@ -75,36 +105,6 @@ public class DemoApplication implements CommandLineRunner {
 					0
 				);	
 				System.out.println(resMsg);	
-			}	
-			LocalDateTime date = LocalDateTime.now();
-			List<WKAssessment> wkAsmtList = wkAssessmentService.getAssessmentList();
-			System.out.println("************** wkAsmtList " +wkAsmtList);
-			System.out.println("************** wkAsmtList.size " + wkAsmtList.size());
-			if (wkAsmtList.size()>1){				
-				for(WKAssessment wkAsmt : wkAsmtList) {
-				System.out.println("*********** wkAsmt" + wkAsmt);
-				Assessment migAssessment = new Assessment();
-				migAssessment.setAssessmentId(wkAsmt.getAssessmentId());
-				migAssessment.setEncounterId(wkAsmt.getAssessmentId());
-				migAssessment.setClinicCd(wkAsmt.getClinicCd());
-				migAssessment.setCodeAssessmentCd(wkAsmt.getCodeAssessmentCd());
-				migAssessment.setCodeAssessmentFieldId(wkAsmt.getCodeAssessmentFieldId());
-				migAssessment.setRowId(wkAsmt.getRowId());
-				migAssessment.setAssessmentResult("migrated");//(wkAsmt.getAssessmentResult());
-				migAssessment.setCims1Key(wkAsmt.getCims1Key());
-				migAssessment.setCreatedBy(wkAsmt.getCreatedBy());
-				migAssessment.setCreatedDTM(wkAsmt.getCreatedDTM());
-				migAssessment.setUpdatedBy(wkAsmt.getUpdatedBy());
-				migAssessment.setUpdatedDTM(new Timestamp(System.currentTimeMillis()));
-				migAssessment.setVersion(wkAsmt.getVersion());
-				//System.out.println("*********** migAssessment" + migAssessment);
-				String targetRes = assessmentService.updateAssessment(migAssessment);
-				System.out.println("*********** RESULT updateAssessment TARGET" + targetRes);
-				wkAsmt.setApplyStatus(targetRes);	
-				wkAsmt.setApplyDTM(date);	
-				String stagingRes = wkAssessmentService.updateWKAssessment(wkAsmt);
-				System.out.println("*********** RESULT updateAssessment STAGING"+stagingRes);
-			}
 			}
 		}
 
