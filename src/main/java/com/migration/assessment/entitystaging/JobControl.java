@@ -1,4 +1,4 @@
-package com.example.demo.entitystaging;
+package com.migration.assessment.entitystaging;
 
 import java.math.BigInteger;
 import java.util.Date;

@@ -1,6 +1,6 @@
-package com.example.demo.daostaging;
+package com.migration.assessment.daostaging;
 
-import com.example.demo.entitystaging.JobControl;
+import com.migration.assessment.entitystaging.JobControl;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 // import org.springframework.data.jpa.repository.Query;

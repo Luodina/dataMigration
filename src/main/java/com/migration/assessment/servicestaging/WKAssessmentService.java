@@ -1,10 +1,10 @@
-package com.example.demo.servicestaging;
+package com.migration.assessment.servicestaging;
 
-import com.example.demo.daostaging.WKAssessmentDao;
-import com.example.demo.entitystaging.WKAssessment;
+import com.migration.assessment.daostaging.WKAssessmentDao;
+import com.migration.assessment.entitystaging.WKAssessment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class WKAssessmentService {
         return this.wkAssessmentDao.getAssessmentListById(id);
     }
     
-    // @Transactional(readOnly = false)
+    @Transactional(readOnly = false)
     public String updateWKAssessment(WKAssessment asmt) {
         try{
             WKAssessment ff = this.wkAssessmentDao.saveAndFlush(asmt);

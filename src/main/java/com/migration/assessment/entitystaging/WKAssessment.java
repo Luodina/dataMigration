@@ -1,7 +1,6 @@
-package com.example.demo.entitystaging;
+package com.migration.assessment.entitystaging;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -75,7 +74,7 @@ public class WKAssessment {
     private String applyStatus;
 
     @Column(name = "APPLY_DTM", nullable = true, length = 6)
-    private LocalDateTime applyDTM;
+    private Date applyDTM;
 
     public WKAssessment(Long id,
             BigInteger batchId, 
@@ -87,7 +86,7 @@ public class WKAssessment {
             BigInteger codeAssessmentFieldId,
             BigInteger rowId,
             String assessmentResult,
-            BigInteger cims1Key,
+            //BigInteger cims1Key,
             String createdBy, 
             Date createdDTM, 
             String updatedBy, 
@@ -98,7 +97,7 @@ public class WKAssessment {
             BigInteger verifyStatus, 
             String resultMsg, 
             String applyStatus, 
-            LocalDateTime applyDTM
+            Date applyDTM
             ) {
                 this.id =id;
         this.batchId = batchId;
@@ -108,7 +107,7 @@ public class WKAssessment {
         this.clinicCd = clinicCd;
         this.codeAssessmentCd = codeAssessmentCd;
         this.codeAssessmentFieldId = codeAssessmentFieldId;
-
+        this.cims1Key = assessmentId;
         this.rowId = rowId;
         this.assessmentResult = assessmentResult;
         this.createdBy = createdBy;
@@ -143,11 +142,11 @@ public class WKAssessment {
         this.createdDTM = createdDTM;
     }
 
-    public LocalDateTime getApplyDTM() {
+    public Date getApplyDTM() {
         return applyDTM;
     }
 
-    public void setApplyDTM(LocalDateTime applyDTM) {
+    public void setApplyDTM(Date applyDTM) {
         this.applyDTM = applyDTM;
     }
     
@@ -176,11 +175,11 @@ public class WKAssessment {
     }
 
     public BigInteger getCims1Key() {
-        return cims1Key;
+        return assessmentId;
     }
 
     public void setCims1Key(final BigInteger cims1Key) {
-        this.cims1Key = cims1Key;
+        this.cims1Key = assessmentId;
     }
     
     public BigInteger getVerifyStatus() {

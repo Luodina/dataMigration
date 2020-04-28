@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.migration.assessment.config;
 
 import java.util.HashMap;
 
@@ -9,7 +9,6 @@ import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,38 +21,37 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @PropertySource({"classpath:datasource.properties"})
 @EnableJpaRepositories(
-	basePackages = "com.example.demo.daostaging",
-	entityManagerFactoryRef = "stagingEntityManager",
-	transactionManagerRef = "stagingTransactionManager"
+	basePackages = "com.migration.assessment.daotarget",
+	entityManagerFactoryRef = "targetEntityManager",
+	transactionManagerRef = "targetTransactionManager"
+  
 )
-public class StagingDSConfig {
+public class TargetDSConfig {
 
 	@Autowired
     private Environment env;
 	
 	@Bean
-    @Primary
-    public DataSource stagingDataSource() {
+    public DataSource targetDataSource() {
   
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        //dataSource.setDriverClassName(env.getProperty("spring.staging-datasource.driverClassName"));
-        dataSource.setUrl(env.getProperty("spring.staging-datasource.url"));
-        dataSource.setUsername(env.getProperty("spring.staging-datasource.username"));
-        dataSource.setPassword(env.getProperty("spring.staging-datasource.password"));
+        //dataSource.setDriverClassName(env.getProperty("spring.target-datasource.driverClassName"));
+        dataSource.setUrl(env.getProperty("spring.target-datasource.url"));
+        dataSource.setUsername(env.getProperty("spring.target-datasource.username"));
+        dataSource.setPassword(env.getProperty("spring.target-datasource.password"));
  
         return dataSource;
     }
-     
-	
-    @Bean("stagingEntityManager")
-    @Primary
-    public LocalContainerEntityManagerFactoryBean stagingEntityManager() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(stagingDataSource());
-        em.setPackagesToScan(new String[] { "com.example.demo.entitystaging" });
-        em.setPersistenceUnitName("Staging@dh-s12c-t02:29801/cimc1d2_dev.cdcoradb11.server.ha.org.hk");
  
-        HibernateJpaVendorAdapter vendorAdapter= new HibernateJpaVendorAdapter();
+	
+    @Bean("targetEntityManager")
+    public LocalContainerEntityManagerFactoryBean targetEntityManager() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(targetDataSource());
+        em.setPackagesToScan(new String[] { "com.migration.assessment.entitytarget" });
+        em.setPersistenceUnitName("Target@cimvmc1a:19306/cimc1d2.cdcoradb11.server.ha.org.hk");
+ 
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
@@ -61,17 +59,16 @@ public class StagingDSConfig {
         properties.put("hibernate.physical_naming_strategy", SpringPhysicalNamingStrategy.class.getName());
         properties.put("hibernate.implicit_naming_strategy", SpringImplicitNamingStrategy.class.getName());
         em.setJpaPropertyMap(properties);
-        
+ 
         return em;
     }
      
  
-    @Bean("stagingTransactionManager")
-    @Primary
-    public PlatformTransactionManager stagingTransactionManager() {
+    @Bean("targetTransactionManager")
+    public PlatformTransactionManager targetTransactionManager() {
   
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(stagingEntityManager().getObject());
+        transactionManager.setEntityManagerFactory(targetEntityManager().getObject());
         
         return transactionManager;
     }

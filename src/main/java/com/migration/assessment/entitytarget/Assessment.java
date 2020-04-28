@@ -1,4 +1,4 @@
-package com.example.demo.entitytarget;
+package com.migration.assessment.entitytarget;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -10,7 +10,8 @@ import javax.persistence.*;
 public class Assessment {
     @Column(name = "ASSESSMENT_ID", nullable = false, length = 10)
     @Id
-    // @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CUST_SEQ")
+    @SequenceGenerator(sequenceName = "ASSESSMENT.SEQ_ASSESSMENT_ID",schema="ASSESSMENT",  allocationSize = 1, name = "CUST_SEQ")
     private BigInteger assessmentId;
    
     @Column(name = "ENCOUNTER_ID", nullable = true, length = 14)
@@ -68,7 +69,7 @@ public class Assessment {
         this.clinicCd = clinicCd;
         this.codeAssessmentCd = codeAssessmentCd;
         this.codeAssessmentFieldId = codeAssessmentFieldId;
-
+        this.cims1Key = assessmentId;
         this.rowId = rowId;
         this.assessmentResult = assessmentResult;
         this.createdBy = createdBy;
@@ -97,21 +98,20 @@ public class Assessment {
         this.createdDTM = createdDTM;
     }
 
-   
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-    
     public BigInteger getCims1Key() {
         return cims1Key;
     }
 
     public void setCims1Key(final BigInteger cims1Key) {
         this.cims1Key = cims1Key;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public Date getUpdatedDTM() {

@@ -1,7 +1,7 @@
-package com.example.demo.servicestaging;
+package com.migration.assessment.servicestaging;
 
-import com.example.demo.daostaging.JobControlDao;
-import com.example.demo.entitystaging.JobControl;
+import com.migration.assessment.daostaging.JobControlDao;
+import com.migration.assessment.entitystaging.JobControl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

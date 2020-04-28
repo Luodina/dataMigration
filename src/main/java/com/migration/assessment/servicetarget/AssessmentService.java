@@ -1,10 +1,10 @@
-package com.example.demo.servicetarget;
+package com.migration.assessment.servicetarget;
 
-import com.example.demo.daotarget.AssessmentDao;
-import com.example.demo.entitytarget.Assessment;
+import com.migration.assessment.daotarget.AssessmentDao;
+import com.migration.assessment.entitytarget.Assessment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +12,8 @@ import java.util.List;
 
 @Service
 public class AssessmentService {
-
     private static Logger log = LoggerFactory.getLogger(AssessmentService.class);
-
+    
     @Autowired
     AssessmentDao assessmentDao;
 
@@ -29,7 +28,7 @@ public class AssessmentService {
     //     return this.AssessmentDao.findById(id).get();
     // }
 
-    // @Transactional(readOnly = false)
+    @Transactional(readOnly = false)
     public String updateAssessment(Assessment asmt) {
         try{
             Assessment ff = this.assessmentDao.saveAndFlush(asmt);
