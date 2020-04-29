@@ -2,11 +2,30 @@ package com.migration.assessment.entitystaging;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.Map;
+
 import javax.persistence.*;
 
 @Entity
+
+@NamedStoredProcedureQuery(name = "PKG_JOB_CONTROL.SP_JOB_START",
+                            procedureName = "PKG_JOB_CONTROL.SP_JOB_START",
+		parameters = { 
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_MODULE_NAME", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_BATCH_NAME", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_INST_CD", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_APPLICATION_CD", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_JOB_TYPE", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_DATA_FROM_DTM", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_DATA_TO_DTM", type = String.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "IN_PROCESS_ID", type = Integer.class),
+            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "OUT_INSTANCE_ID", type = Integer.class) ,
+            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "OUT_RESULT_CD", type = Integer.class),
+            @StoredProcedureParameter(mode = ParameterMode.OUT, name = "OUT_RESULT_MSG", type = String.class)
+        }
+    )
+
 @Table(name = "JOB_CONTROL")
-//@IdClass(JobControlId.class)
 public class JobControl {
     // @Column(name = "UNIQUE_KEY", updatable = false, nullable = false)
     // @Id

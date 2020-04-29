@@ -19,19 +19,35 @@ public interface JobControlDao extends JpaRepository<JobControl, String> {
 
     public JobControl findByModuleNameAndBatchName(@Param("moduleName") String moduleName, @Param("batchName") String batchName);  
    
-    @Procedure(procedureName = "PKG_JOB_CONTROL.SP_JOB_START", outputParameterName = "OUT_INSTANCE_ID")
-    public Integer jobStart(
-        @Param("IN_MODULE_NAME") String IN_MODULE_NAME, 
-        @Param("IN_BATCH_NAME") String IN_BATCH_NAME, 
-        @Param("IN_INST_CD") String IN_INST_CD,
-        @Param("IN_APPLICATION_CD") String IN_APPLICATION_CD,
-        @Param("IN_JOB_TYPE") String IN_JOB_TYPE,
-        @Param("IN_DATA_FROM_DTM") String IN_DATA_FROM_DTM,
-        @Param("IN_DATA_TO_DTM") String IN_DATA_TO_DTM,
-        @Param("IN_PROCESS_ID") Integer IN_PROCESS_ID,
-        @Param("OUT_RESULT_CD") int OUT_RESULT_CD,
-        @Param("OUT_RESULT_MSG") String OUT_RESULT_MSG
-        );
+    // @Procedure(procedureName = "PKG_JOB_CONTROL.SP_JOB_START", outputParameterName = "OUT_INSTANCE_ID")
+    // public Integer jobStart(
+    //     @Param("IN_MODULE_NAME") String IN_MODULE_NAME, 
+    //     @Param("IN_BATCH_NAME") String IN_BATCH_NAME, 
+    //     @Param("IN_INST_CD") String IN_INST_CD,
+    //     @Param("IN_APPLICATION_CD") String IN_APPLICATION_CD,
+    //     @Param("IN_JOB_TYPE") String IN_JOB_TYPE,
+    //     @Param("IN_DATA_FROM_DTM") String IN_DATA_FROM_DTM,
+    //     @Param("IN_DATA_TO_DTM") String IN_DATA_TO_DTM,
+    //     @Param("IN_PROCESS_ID") Integer IN_PROCESS_ID,
+    //     @Param("OUT_RESULT_CD") int OUT_RESULT_CD,
+    //     @Param("OUT_RESULT_MSG") String OUT_RESULT_MSG
+    //     );
+
+    @Procedure(name = "PKG_JOB_CONTROL.SP_JOB_START") 
+    public Object jobStart(
+            @Param("IN_MODULE_NAME") String IN_MODULE_NAME, 
+            @Param("IN_BATCH_NAME") String IN_BATCH_NAME, 
+            @Param("IN_INST_CD") String IN_INST_CD,
+            @Param("IN_APPLICATION_CD") String IN_APPLICATION_CD,
+            @Param("IN_JOB_TYPE") String IN_JOB_TYPE,
+            @Param("IN_DATA_FROM_DTM") String IN_DATA_FROM_DTM,
+            @Param("IN_DATA_TO_DTM") String IN_DATA_TO_DTM,
+            @Param("IN_PROCESS_ID") Integer IN_PROCESS_ID
+            // ,
+            // @Param("OUT_RESULT_CD") String OUT_RESULT_CD,
+            // @Param("OUT_RESULT_MSG") String OUT_RESULT_MSG,
+            // @Param("OUT_INSTANCE_ID") Integer OUT_INSTANCE_ID
+            );
 
     @Procedure(procedureName = "PKG_JOB_CONTROL.SP_JOB_UPDATE", outputParameterName = "OUT_RESULT_MSG")
     public String jobUpdate(
